@@ -51,7 +51,7 @@ function App() {
       <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
       </div>
 
-      <div className="absolute py-4 flex flex-col gap-6 w-[400px] bg-white px-6 shadow-2xl top-[20%] left-[40%] rounded-md   ">
+      <div className="absolute py-4 flex flex-col gap-6 w-[400px] bg-white px-6 shadow-2xl top-[20%] left-[38%] rounded-md   ">
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
         <div className="flex flex-col ">
           <label className="text-gray-700 font-semibold text-md">Enter Quiz Code:</label>
