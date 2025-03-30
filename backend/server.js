@@ -15,6 +15,9 @@ app.use(cors())
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
 const SUBMIT_ANSWER_URL = "https://your-api-url-to-submit-answer";
 
+app.get("/", (req, res) => {
+    res.send("Hello !");
+  });
 
 app.post("/api/v1/fetch", async (req, res) => {
     const { quiz_uc, user_unique_code, pin } = req.body;
