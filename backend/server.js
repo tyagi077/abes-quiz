@@ -1,0 +1,101 @@
+import express from "express"
+import axios from "axios";
+import dotenv from "dotenv";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import cors from "cors"
+dotenv.config()
+const API_KEY = process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(API_KEY);
+
+const app = express();
+app.use(express.json());
+app.use(cors())
+
+
+const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
+const SUBMIT_ANSWER_URL = "https://your-api-url-to-submit-answer";
+
+
+app.post("/api/v1/fetch", async (req, res) => {
+    const { quiz_uc, user_unique_code, pin } = req.body;
+
+    if (!quiz_uc || !user_unique_code || !pin) {
+        return res.json({
+            success: false,
+            msg: "Missing fields"
+        });
+    }
+
+    try {
+        const response = await axios.post(QUIZ_API_URL, {
+            quiz_uc,
+            user_unique_code,
+            pin
+        });
+
+        const quizData = response?.data?.response?.data || [];
+
+        const formattedPrompt = quizData.map((q, index) =>
+            `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
+        ).join("\n\n");
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
+            [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }] ${formattedPrompt}`);
+
+            const response = await result.response;
+            let text = await response.text();
+
+
+            text = text.replace(/```json|```/g, "").trim();
+
+            let parsedData;
+            try {
+                parsedData = JSON.parse(text);
+            } catch (jsonError) {
+                return res.status(500).json({
+                    success: false,
+                    msg: "Invalid response format",
+                    rawData: text
+                });
+            }
+
+            for (const answer of parsedData) {
+                // try {
+                //     await axios.post(SUBMIT_ANSWER_URL, {
+                //         quiz_uc,
+                //         user_unique_code,
+                //         question_id: answer.id,
+                //         selected_answer: answer.correct_option
+                //     });
+                   
+                // } catch (error) {
+                //     console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
+                // }
+                
+            }
+            res.status(200).json({
+                success: true,
+                msg:" All answers submitted! Now click Final Submit manually."
+            });
+            
+    
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            answers: []
+        });
+    }
+
+} catch (error) {
+    return res.status(500).json({
+        success: false,
+        error: error.response?.data || error.message
+    });
+}
+
+})
+
+app.listen(3000);
