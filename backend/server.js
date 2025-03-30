@@ -13,6 +13,8 @@ app.use(cors())
 
 
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
+const FETCH_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
+
 const SUBMIT_ANSWER_URL = "https://your-api-url-to-submit-answer";
 
 app.get("/", (req, res) => {
@@ -30,14 +32,14 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
     try {
-        const response = await axios.post(QUIZ_API_URL, {
+        const response = await axios.post(FETCH_API_URL, {
             quiz_uc,
             user_unique_code,
             pin
         });
 
         const quizData = response?.data?.response?.data || [];
-
+        
         const formattedPrompt = quizData.map((q, index) =>
             `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
         ).join("\n\n");
