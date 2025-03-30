@@ -47,11 +47,10 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen" >
+    <div className="min-h-screen " >
       <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
       </div>
-
-      <div className="absolute py-4 flex flex-col gap-6 w-[400px] bg-white px-6 shadow-2xl top-[20%] left-[38%] rounded-md   ">
+      <div className="absolute py-4 flex flex-col gap-6 overflow-y-auto  w-[300px] sm:w-full max-w-[400px] bg-white px-6 shadow-2xl rounded-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40   ">
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
         <div className="flex flex-col ">
           <label className="text-gray-700 font-semibold text-md">Enter Quiz Code:</label>
@@ -72,7 +71,7 @@ function App() {
 
       </div>
 
-      <div className="relative top-130 z-10 px-5">
+      <div className="relative top-130 z-10 px-5 py-10 ">
         <h3 className="text-lg text-gray-500 font-semibold">Steps:</h3>
         <ul className="flex flex-col gap-2 text-md ">
           <li> 1️⃣ Enter your details (Quiz Code, Admission Number, pin) in the input fields.</li>
