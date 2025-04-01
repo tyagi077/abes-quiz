@@ -86,7 +86,7 @@ function App() {
         </div>
 
         <div className="text-white flex justify-center items-center">
-          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full"  type="submit"value={loading ? `wait for ${time} seconds...` : 'Submit'}disabled={loading} />
+          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full"  type="submit"value={loading ? `Wait for ${time} seconds...` : 'Submit'}disabled={loading} />
         </div>
 
       </div>
