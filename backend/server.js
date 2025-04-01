@@ -13,13 +13,8 @@ app.use(cors())
 
 
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
-const FETCH_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
+const SUBMIT_ANSWER_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer";
 
-const SUBMIT_ANSWER_URL = "https://your-api-url-to-submit-answer";
-
-app.get("/", (req, res) => {
-    res.send("Hello !");
-  });
 
 app.post("/api/v1/fetch", async (req, res) => {
     const { quiz_uc, user_unique_code, pin } = req.body;
@@ -32,14 +27,28 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
     try {
-        const response = await axios.post(FETCH_API_URL, {
+        const response = await axios.post(QUIZ_API_URL, {
             quiz_uc,
             user_unique_code,
             pin
         });
-
-        const quizData = response?.data?.response?.data || [];
         
+        const quizData = response?.data?.response?.data || [];
+
+        if (!Array.isArray(quizData)) {
+            return res.status(200).json({
+                success: false,
+                msg: "Quiz has not started yet",
+                quiz_details: quizData,
+            });
+        }
+        if (quizData.length === 0) {
+            return res.status(400).json({
+                success: false,
+                msg: "Invalid quiz details",
+            });
+        }
+
         const formattedPrompt = quizData.map((q, index) =>
             `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
         ).join("\n\n");
@@ -49,8 +58,8 @@ app.post("/api/v1/fetch", async (req, res) => {
             const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
             [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }] ${formattedPrompt}`);
 
-            const response = await result.response;
-            let text = await response.text();
+            const airesponse = await result.response;
+            let text = await airesponse.text();
 
 
             text = text.replace(/```json|```/g, "").trim();
@@ -67,25 +76,24 @@ app.post("/api/v1/fetch", async (req, res) => {
             }
 
             for (const answer of parsedData) {
-                // try {
-                //     await axios.post(SUBMIT_ANSWER_URL, {
-                //         quiz_uc,
-                //         user_unique_code,
-                //         question_id: answer.id,
-                //         selected_answer: answer.correct_option
-                //     });
+                try {
+                    await axios.post(SUBMIT_ANSWER_URL, {
+                        answer:answer.correct_option,
+                        pin:pin,
+                        question_id:answer.id,
+                        quiz_uc:quiz_uc,
+                        user_unique_code:user_unique_code
+                    });
                    
-                // } catch (error) {
-                //     console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
-                // }
-                
+                } catch (error) {
+                    console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
+                }
             }
             res.status(200).json({
                 success: true,
-                msg:" All answers submitted! Now click Final Submit manually."
+                msg:"👉 All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
             });
             
-    
 
     } catch (error) {
         return res.status(500).json({
@@ -93,7 +101,6 @@ app.post("/api/v1/fetch", async (req, res) => {
             answers: []
         });
     }
-
 } catch (error) {
     return res.status(500).json({
         success: false,

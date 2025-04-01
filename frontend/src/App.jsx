@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 function App() {
 
   const [loading, setLoading] = useState(false);
+  const [time,setTime]=useState(5);
   const [formData, setFormData] = useState({
     quiz_id: "",
     admission_number: "",
@@ -18,6 +19,7 @@ function App() {
     }
 
     setLoading(true);
+    setTime(5);
 
     try {
       const response = await axios.post("https://abes-quiz-backend.vercel.app/api/v1/fetch", {
@@ -25,26 +27,44 @@ function App() {
         user_unique_code: formData.admission_number,
         pin: formData.pin
       })
-      console.log("Response Data:", response.data);
       if(response.data.success){
         toast.success(response.data.msg ,{
           autoClose:5000
         })
+        setFormData({
+          quiz_id: "",
+          admission_number: "",
+          pin: "",
+        });
+        
       }else{
         toast.error(response.data.msg)
       }
     }
     catch (error) {
-      console.error("Error:", error.response?.data || error.message);
+  
       toast.error(`${error.response?.data?.error?.msg || "Something went wrong"}`);
     }
     finally {
       setLoading(false);
     }
   }
+
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
+  useEffect(() => {
+    if (loading && time > 0) {
+      const intervalId = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [loading]);
 
   return (
     <div className="min-h-screen " >
@@ -66,7 +86,7 @@ function App() {
         </div>
 
         <div className="text-white flex justify-center items-center">
-          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full"  type="submit"value={loading ? 'wait for 5 seconds...' : 'Submit'}disabled={loading} />
+          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full"  type="submit"value={loading ? `wait for ${time} seconds...` : 'Submit'}disabled={loading} />
         </div>
 
       </div>
