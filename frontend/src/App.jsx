@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 function App() {
 
   const [loading, setLoading] = useState(false);
-  const [time,setTime]=useState(5);
+  const [time,setTime]=useState(10);
   const [formData, setFormData] = useState({
     quiz_id: "",
     admission_number: "",
@@ -19,7 +19,7 @@ function App() {
     }
 
     setLoading(true);
-    setTime(5);
+    setTime(10);
 
     try {
       const response = await axios.post("https://abes-quiz-backend.vercel.app/api/v1/fetch", {
