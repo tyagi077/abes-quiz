@@ -87,11 +87,16 @@ app.post("/api/v1/fetch", async (req, res) => {
                    
                 } catch (error) {
                     console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
+                    return res.status(500).json({
+                        success: false,
+                        error: error.response?.data || error.message
+                    });
+                    
                 }
             }
             res.status(200).json({
                 success: true,
-                msg:"👉 All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
+                msg:"All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
             });
             
 
