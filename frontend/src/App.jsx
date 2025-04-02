@@ -91,7 +91,7 @@ function App() {
 
       </div>
 
-      <div className="relative top-130 z-10 px-5 py-10 ">
+      <div className="relative top-140 z-10 px-5 py-10 ">
         <h3 className="text-lg text-gray-500 font-semibold">Steps:</h3>
         <ul className="flex flex-col gap-2 text-md ">
           <li> 1️⃣ Enter your details (Quiz Code, Admission Number, pin) in the input fields.</li>
