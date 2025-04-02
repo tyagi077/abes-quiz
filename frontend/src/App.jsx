@@ -93,9 +93,10 @@ function App() {
       <div className="absolute top-3/4  px-5 py-10  w-full ">
         <h3 className="text-lg text-gray-500 font-semibold">Steps:</h3>
         <ul className="flex flex-col gap-2 text-md w-full">
+        <li className="font-semibold">*First Step Bharosa krna hai🎉</li>
           <li> 1️⃣ Enter your details (Quiz Code, Admission Number, pin) in the input fields.</li>
           <li> 2️⃣ Click "Submit" and Wait for a few seconds</li>
-          <li> 3️⃣ Go to <a className="underline text-blue-500" href="https://abesquiz.netlify.app" target="_blank" rel="noopener noreferrer"> abesquiz.netlify.app</a> and manually click "Submit" to proceed.</li>
+          <li> 3️⃣ Go to <a className="underline text-blue-500" href="https://abesquiz.netlify.app" target="_blank" rel="noopener noreferrer"> abesquiz.netlify.app</a> Refresh and manually click "Submit" to proceed.</li>
           <li> 4️⃣ Done! Your quiz answers will be processed. 🎉</li>
         </ul>
       </div>
