@@ -53,16 +53,24 @@ app.post("/api/v1/fetch", async (req, res) => {
             `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
         ).join("\n\n");
 
+        
         try {
+            console.log("js");
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-            const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
-            [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }] ${formattedPrompt}`);
+            
+           
+                const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
+                    [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }] ${formattedPrompt}`);
+        
+           
 
             const airesponse = await result.response;
             let text = await airesponse.text();
 
 
             text = text.replace(/```json|```/g, "").trim();
+            console.log(text);
+            
 
             let parsedData;
             try {

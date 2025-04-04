@@ -31,7 +31,8 @@ function App() {
         toast.success(response.data.msg ,{
           autoClose:8000
         })
-        console.log(response.data.success);
+
+      
         setFormData({
           quiz_id: "",
           admission_number: "",
@@ -43,7 +44,6 @@ function App() {
       }
     }
     catch (error) {
-  
       toast.error(`${error.response?.data?.error?.msg || "Something went wrong"}`);
     }
     finally {
