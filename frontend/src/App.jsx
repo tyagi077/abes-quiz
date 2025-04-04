@@ -29,8 +29,9 @@ function App() {
       })
       if(response.data.success){
         toast.success(response.data.msg ,{
-          autoClose:false
+          autoClose:8000
         })
+        console.log(response.data.success);
         setFormData({
           quiz_id: "",
           admission_number: "",
@@ -69,6 +70,7 @@ function App() {
   return (
     <div className="min-h-screen relative" >
       <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
+      <h2 className="text-red-500 font-semibold">*Under maintenance</h2>
       </div>
       <div className="absolute py-4 flex flex-col gap-6  overflow-y-auto w-[90%] max-w-[400px]  bg-white px-4   shadow-2xl rounded-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40   ">
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
