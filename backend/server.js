@@ -61,12 +61,15 @@ app.post("/api/v1/fetch", async (req, res) => {
 
 
         try {
-            const prompt = `You are an expert quiz solver. Answer these in JSON format:
-[{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }]
-${formattedPrompt}`;
+            const prompt = `You are an expert quiz solver. Provide the answers only in JSON format. Do not include any other text, explanations, or introductions. Please output only the JSON response like this:
+
+            [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }]
+             
+            ${formattedPrompt}`;
+            
 
             const completion = await client.chat.completions.create({
-                model: "llama-3.3-70b-versatile", // or "llama3-8b-8192", etc.
+                model: "llama3-70b-8192", // or "llama3-8b-8192", etc.
                 messages: [
                     {
                         role: "user",
@@ -77,8 +80,6 @@ ${formattedPrompt}`;
             });
 
             let text = completion.choices[0]?.message?.content?.trim();
-        
-
             // const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
             // const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
@@ -114,6 +115,7 @@ ${formattedPrompt}`;
                         quiz_uc: quiz_uc,
                         user_unique_code: user_unique_code
                     });
+                    console.log("hiii");
 
                 } catch (error) {
                     console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
@@ -133,7 +135,7 @@ ${formattedPrompt}`;
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                answers: []
+                error:"Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! It will work, I promise!"
             });
         }
     } catch (error) {

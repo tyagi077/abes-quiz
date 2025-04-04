@@ -17,6 +17,7 @@ function App() {
       toast.error("All fields are required!");
       return;
     }
+    
     localStorage.setItem("admission_number", formData.admission_number);
     localStorage.setItem("pin", formData.pin);
     setLoading(true);
@@ -31,7 +32,7 @@ function App() {
 
       if (response.data.success) {
         toast.success(response.data.msg, {
-          autoClose: 8000
+          autoClose: 8000,
         })
 
         setFormData({
@@ -45,8 +46,24 @@ function App() {
       }
     }
     catch (error) {
-      toast.error(`${error.response?.data?.error?.msg || "Something went wrong"}`);
+      if(error.response?.data?.error?.msg){
+        toast.error(error.response?.data?.error?.msg);
+        return;
+      }else{
+
+      }
+      toast.error(
+        "Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! ",
+        {
+          position: "top-left",
+          autoClose: 60000, // 60 seconds
+          pauseOnFocusLoss:false  ,
+          pauseOnHover:false,
+          style:{width:'70vw'}
+        }
+      );
     }
+    
     finally {
       setLoading(false);
     }
@@ -55,7 +72,7 @@ function App() {
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-
+ // 👈 stays for 8 seconds
   useEffect(() => {
     const storedAdmission = localStorage.getItem("admission_number");
     const storedPin = localStorage.getItem("pin");
