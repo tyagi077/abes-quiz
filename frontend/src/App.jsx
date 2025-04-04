@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 function App() {
 
   const [loading, setLoading] = useState(false);
-  const [time,setTime]=useState(10);
+  const [time, setTime] = useState(10);
   const [formData, setFormData] = useState({
     quiz_id: "",
     admission_number: "",
@@ -17,7 +17,8 @@ function App() {
       toast.error("All fields are required!");
       return;
     }
-
+    localStorage.setItem("admission_number", formData.admission_number);
+    localStorage.setItem("pin", formData.pin);
     setLoading(true);
     setTime(10);
 
@@ -27,19 +28,19 @@ function App() {
         user_unique_code: formData.admission_number,
         pin: formData.pin
       })
-      if(response.data.success){
-        toast.success(response.data.msg ,{
-          autoClose:8000
+
+      if (response.data.success) {
+        toast.success(response.data.msg, {
+          autoClose: 8000
         })
 
-      
         setFormData({
           quiz_id: "",
           admission_number: "",
           pin: "",
         });
-        
-      }else{
+
+      } else {
         toast.error(response.data.msg)
       }
     }
@@ -54,6 +55,21 @@ function App() {
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
+  useEffect(() => {
+    const storedAdmission = localStorage.getItem("admission_number");
+    const storedPin = localStorage.getItem("pin");
+
+    if (storedAdmission && storedPin) {
+      setFormData((prev) => ({
+        ...prev,
+        admission_number: storedAdmission,
+        pin: storedPin
+      }));
+    }
+  }, []);
+
+
 
   useEffect(() => {
     if (loading && time > 0) {
@@ -87,14 +103,14 @@ function App() {
         </div>
 
         <div className="text-white flex justify-center items-center ">
-          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full"  type="submit"value={loading ? `Wait for ${time} seconds...` : 'Submit'}disabled={loading} />
+          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full" type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
         </div>
 
       </div>
       <div className="absolute top-3/4  px-5 py-10  w-full ">
         <h3 className="text-lg text-gray-500 font-semibold">Steps:</h3>
         <ul className="flex flex-col gap-2 text-md w-full">
-        <li className="font-semibold">*First Step Bharosa krna hai🎉</li>
+          <li className="font-semibold">*First Step Bharosa krna hai🎉</li>
           <li> 1️⃣ Enter your details (Quiz Code, Admission Number, pin) in the input fields.</li>
           <li> 2️⃣ Click "Submit" and Wait for a few seconds</li>
           <li> 3️⃣ Go to <a className="underline text-blue-500" href="https://abesquiz.netlify.app" target="_blank" rel="noopener noreferrer"> abesquiz.netlify.app</a> Refresh and manually click "Submit" to proceed.</li>
