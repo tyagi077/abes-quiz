@@ -20,7 +20,7 @@ app.use(cors())
 
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
 const SUBMIT_ANSWER_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer";
-const QUIZ_FETCH_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
+// const QUIZ_FETCH_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
 
 
 app.post("/api/v1/fetch", async (req, res) => {
@@ -34,36 +34,18 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
     try {
-        const xForwardedFor = req.headers['x-forwarded-for'];
-        const clientIp = xForwardedFor ? xForwardedFor.split(',')[0] : req.socket.remoteAddress;
-    
-        console.log("Client IP:", clientIp);
-    
-        res.json({
-            success:true,
-            msg:clientIp
-        })
-        return 
-      } catch (err) {
-        console.error("Error getting IP:", err);
-        res.status(500).json({ error: "Internal Server Error" });
-      }
-
-    //   hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-
-    try {
-        try{
-            const fetch_response= await axios.post(QUIZ_FETCH_URL,{
-                quiz_uc,
-                user_unique_code,
-                pin
-            })
-        }catch(error){
-            return res.json({
-                success:false,
-                msg: error.response?.data.msg || error.message
-            })
-        }
+        // try{
+        //     const fetch_response= await axios.post(QUIZ_FETCH_URL,{
+        //         quiz_uc,
+        //         user_unique_code,
+        //         pin
+        //     })
+        // }catch(error){
+        //     return res.json({
+        //         success:false,
+        //         msg: error.response?.data.msg || error.message
+        //     })
+        // }
 
         const response = await axios.post(QUIZ_API_URL, {
             quiz_uc,
