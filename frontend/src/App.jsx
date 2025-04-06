@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 function App() {
 
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(10);
+  const [time,setTime]=useState(10);
   const [formData, setFormData] = useState({
     quiz_id: "",
     admission_number: "",
@@ -13,11 +13,13 @@ function App() {
   });
 
   const handleClick = async (e) => {
+   
     if (!formData.quiz_id || !formData.admission_number || !formData.pin) {
       toast.error("All fields are required!");
       return;
     }
-    
+
+
     localStorage.setItem("admission_number", formData.admission_number);
     localStorage.setItem("pin", formData.pin);
     setLoading(true);
@@ -46,24 +48,23 @@ function App() {
       }
     }
     catch (error) {
-      if(error.response?.data?.error?.msg){
+      if (error.response?.data?.error?.msg) {
         toast.error(error.response?.data?.error?.msg);
         return;
-      }else{
-
-      }
+      } else {
       toast.error(
         "Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! ",
         {
           position: "top-left",
           autoClose: 60000, // 60 seconds
-          pauseOnFocusLoss:false  ,
-          pauseOnHover:false,
-          style:{width:'70vw'}
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          style: { width: '70vw' }
         }
       );
     }
-    
+    }
+
     finally {
       setLoading(false);
     }
@@ -72,7 +73,7 @@ function App() {
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
- // 👈 stays for 8 seconds
+  // 👈 stays for 8 seconds
   useEffect(() => {
     const storedAdmission = localStorage.getItem("admission_number");
     const storedPin = localStorage.getItem("pin");
@@ -120,7 +121,7 @@ function App() {
         </div>
 
         <div className="text-white flex justify-center items-center ">
-          <input onClick={(e) => handleClick(e)} className="bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full" type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
+          <input  onClick={(e) => handleClick(e)} className={`bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
         </div>
 
       </div>
