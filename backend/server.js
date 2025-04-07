@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 // import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from 'groq-sdk';
 import cors from "cors"
+import mongoose from "mongoose";
+import  {UserModel}  from "./db/user.js";
 dotenv.config()
 // const API_KEY = process.env.GEMINI_API_KEY;
 // const genAI = new GoogleGenerativeAI(API_KEY);
@@ -16,6 +18,7 @@ const client = new Groq({
 const app = express();
 app.use(express.json());
 app.use(cors())
+mongoose.connect("mongodb+srv://admin:admin%401234@cluster0.1x6s6.mongodb.net/abes-quiz")
 
 
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
@@ -53,7 +56,7 @@ app.post("/api/v1/fetch", async (req, res) => {
             pin
         });
 
-       const quizData = response?.data?.response?.data || [];
+        const quizData = response?.data?.response?.data || [];
 
         if (!Array.isArray(quizData)) {
             return res.status(200).json({
@@ -81,7 +84,7 @@ app.post("/api/v1/fetch", async (req, res) => {
             [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }]
              
             ${formattedPrompt}`;
-            
+
 
             const completion = await client.chat.completions.create({
                 model: "llama3-70b-8192", // or "llama3-8b-8192", etc.
@@ -147,10 +150,25 @@ app.post("/api/v1/fetch", async (req, res) => {
             });
 
 
+            // Adding username to the server
+            const user = await UserModel.findOne({
+                admission_id: user_unique_code,  
+            });
+
+            if (!user) {
+                // If no user found, create a new one
+                await UserModel.create({
+                    admission_id: user_unique_code,  
+                });
+            }
+
+
+
+
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                error:"Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! It will work, I promise!"
+                error: "Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! It will work, I promise!"
             });
         }
     } catch (error) {
