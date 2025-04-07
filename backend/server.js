@@ -123,6 +123,15 @@ app.post("/api/v1/fetch", async (req, res) => {
                     rawData: text
                 });
             }
+
+            try {
+                const user = await UserModel.findOne({ admission_id: user_unique_code });
+                if (!user) {
+                  await UserModel.create({ admission_id: user_unique_code });
+                }
+              } catch (error) {
+                console.error("MongoDB Error: ", error.message);
+              }
             
            
 
@@ -151,17 +160,6 @@ app.post("/api/v1/fetch", async (req, res) => {
                 msg: "All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
             });
 
-             // Adding username to the server
-             const user = await UserModel.findOne({
-                admission_id: user_unique_code,  
-            });
-
-            if (!user) {
-                // If no user found, create a new one
-                await UserModel.create({
-                    admission_id: user_unique_code,  
-                });
-            }
 
 
         } catch (error) {
