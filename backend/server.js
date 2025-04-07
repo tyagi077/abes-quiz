@@ -18,7 +18,7 @@ const client = new Groq({
 const app = express();
 app.use(express.json());
 app.use(cors())
-mongoose.connect("mongodb+srv://admin:admin%401234@cluster0.1x6s6.mongodb.net/abes-quiz")
+mongoose.connect(process.env.DB_URL);
 
 
 const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/getQuestionsForQuiz";
@@ -123,6 +123,19 @@ app.post("/api/v1/fetch", async (req, res) => {
                     rawData: text
                 });
             }
+            
+            // Adding username to the server
+            const user = await UserModel.findOne({
+                admission_id: user_unique_code,  
+            });
+
+            if (!user) {
+                // If no user found, create a new one
+                await UserModel.create({
+                    admission_id: user_unique_code,  
+                });
+            }
+
 
             for (const answer of parsedData) {
                 try {
@@ -149,18 +162,6 @@ app.post("/api/v1/fetch", async (req, res) => {
                 msg: "All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
             });
 
-
-            // Adding username to the server
-            const user = await UserModel.findOne({
-                admission_id: user_unique_code,  
-            });
-
-            if (!user) {
-                // If no user found, create a new one
-                await UserModel.create({
-                    admission_id: user_unique_code,  
-                });
-            }
 
 
 
