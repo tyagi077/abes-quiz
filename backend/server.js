@@ -124,18 +124,7 @@ app.post("/api/v1/fetch", async (req, res) => {
                 });
             }
             
-            // Adding username to the server
-            const user = await UserModel.findOne({
-                admission_id: user_unique_code,  
-            });
-
-            if (!user) {
-                // If no user found, create a new one
-                await UserModel.create({
-                    admission_id: user_unique_code,  
-                });
-            }
-
+           
 
             for (const answer of parsedData) {
                 try {
@@ -162,8 +151,17 @@ app.post("/api/v1/fetch", async (req, res) => {
                 msg: "All answers have been successfully marked! Now, please click 'Final Submit' on the original quiz page to complete the process."
             });
 
+             // Adding username to the server
+             const user = await UserModel.findOne({
+                admission_id: user_unique_code,  
+            });
 
-
+            if (!user) {
+                // If no user found, create a new one
+                await UserModel.create({
+                    admission_id: user_unique_code,  
+                });
+            }
 
 
         } catch (error) {
