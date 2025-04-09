@@ -104,10 +104,12 @@ function App() {
 
   return (
     <div className="min-h-screen relative" >
-      <div className="fixed top-0 w-full h-[300px] bg-[#F9EEAD]">
-        <h3 className="text-red-500 px-5 font-semibold`">🚨 Important Disclaimer 🚨</h3>
+      <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
+        {/* <h3 className="text-red-500 px-5 font-semibold`">🚨 Important Disclaimer 🚨</h3>
         <p className="w-[80%] px-10 text-black font-semibold">This tool is powered by AI and is intended for educational assistance only. Do not rely on it for actual quiz answers. Always attempt the quiz using your own knowledge and understanding to maintain academic honesty and integrity.
-        </p>
+        
+        </p> */
+        }
       </div>
       <div className="absolute py-4 flex flex-col gap-6  overflow-y-auto w-[90%] max-w-[400px]  bg-white px-4   shadow-2xl rounded-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40   ">
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
@@ -125,7 +127,7 @@ function App() {
         </div>
 
         <div className="text-black flex justify-center items-center ">
-          <input onClick={(e) => handleClick(e)} className={`bg-[#F9EEAD] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
+          <input onClick={(e) => handleClick(e)} className={`bg-[#66E1D7] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
         </div>
 
       </div>
