@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 function App() {
 
   const [loading, setLoading] = useState(false);
-  const [time,setTime]=useState(10);
+  const [time, setTime] = useState(10);
   const [formData, setFormData] = useState({
     quiz_id: "",
     admission_number: "",
@@ -13,7 +13,7 @@ function App() {
   });
 
   const handleClick = async (e) => {
-   
+
     if (!formData.quiz_id || !formData.admission_number || !formData.pin) {
       toast.error("All fields are required!");
       return;
@@ -31,7 +31,7 @@ function App() {
         user_unique_code: formData.admission_number,
         pin: formData.pin
       })
-    
+
 
       if (response.data.success) {
         toast.success(response.data.msg, {
@@ -53,17 +53,17 @@ function App() {
         toast.error(error.response?.data?.error?.msg);
         return;
       } else {
-      toast.error(
-        "Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! ",
-        {
-          position: "top-left",
-          autoClose: 60000, // 60 seconds
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-          style: { width: '70vw' }
-        }
-      );
-    }
+        toast.error(
+          "Too many vibes at once 😅 Just wait 60 seconds — your timer starts now. Try again when this toast disappears! ",
+          {
+            position: "top-left",
+            autoClose: 60000, // 60 seconds
+            pauseOnFocusLoss: false,
+            pauseOnHover: false,
+            style: { width: '70vw' }
+          }
+        );
+      }
     }
 
     finally {
@@ -104,7 +104,10 @@ function App() {
 
   return (
     <div className="min-h-screen relative" >
-      <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
+      <div className="fixed top-0 w-full h-[300px] bg-[#F9EEAD]">
+        <h3 className="text-red-500 px-5 font-semibold`">🚨 Important Disclaimer 🚨</h3>
+        <p className="w-[80%] px-10 text-black font-semibold">This tool is powered by AI and is intended for educational assistance only. Do not rely on it for actual quiz answers. Always attempt the quiz using your own knowledge and understanding to maintain academic honesty and integrity.
+        </p>
       </div>
       <div className="absolute py-4 flex flex-col gap-6  overflow-y-auto w-[90%] max-w-[400px]  bg-white px-4   shadow-2xl rounded-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40   ">
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
@@ -121,8 +124,8 @@ function App() {
           <input onChange={handleChange} className="w-full px-2 py-1 focus:outline-none border-b border-black" type="text" name="pin" value={formData.pin} placeholder="4-Digit pin" />
         </div>
 
-        <div className="text-white flex justify-center items-center ">
-          <input  onClick={(e) => handleClick(e)} className={`bg-[#4FDDD1] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
+        <div className="text-black flex justify-center items-center ">
+          <input onClick={(e) => handleClick(e)} className={`bg-[#F9EEAD] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
         </div>
 
       </div>
@@ -134,6 +137,8 @@ function App() {
           <li> 2️⃣ Click "Submit" and Wait for a few seconds</li>
           <li> 3️⃣ Go to <a className="underline text-blue-500" href="https://abesquiz.netlify.app" target="_blank" rel="noopener noreferrer"> abesquiz.netlify.app</a> Refresh and manually click "Submit" to proceed.</li>
           <li> 4️⃣ Done! Your quiz answers will be processed. 🎉</li>
+          <li> 🛑 Note: This website is not officially affiliated with your institution and may go down at any time. Use it responsibly and at your own risk.
+            Stay honest, stay curious! 💡✨</li>
         </ul>
       </div>
     </div>
