@@ -126,7 +126,7 @@ function App() {
           <input onChange={handleChange} className="w-full px-2 py-1 focus:outline-none border-b border-black" type="text" name="pin" value={formData.pin} placeholder="4-Digit pin" />
         </div>
 
-        <div className="text-black flex justify-center items-center ">
+        <div className="text-white flex justify-center items-center ">
           <input onClick={(e) => handleClick(e)} className={`bg-[#66E1D7] cursor-pointer py-3 rounded-md w-full`} type="submit" value={loading ? `Wait for ${time} seconds...` : 'Submit'} disabled={loading} />
         </div>
 
