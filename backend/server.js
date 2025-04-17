@@ -25,8 +25,13 @@ const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1
 const SUBMIT_ANSWER_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer";
 // const QUIZ_FETCH_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
 
+let requestCountToday = 0;
+let lastResetDate = new Date().toDateString();
+
+
 
 app.post("/api/v1/fetch", async (req, res) => {
+
     const { quiz_uc, user_unique_code, pin } = req.body;
 
     if (!quiz_uc || !user_unique_code || !pin) {
@@ -132,6 +137,13 @@ app.post("/api/v1/fetch", async (req, res) => {
               } catch (error) {
                 console.error("MongoDB Error: ", error.message);
               }
+
+              const today = new Date().toDateString();
+              if (today !== lastResetDate) {
+                  requestCountToday = 0;
+                  lastResetDate = today;
+              }
+              requestCountToday++;
             
            
 
@@ -144,7 +156,7 @@ app.post("/api/v1/fetch", async (req, res) => {
                         quiz_uc: quiz_uc,
                         user_unique_code: user_unique_code
                     });
-                    console.log("hiii");
+                    
 
                 } catch (error) {
                     console.error(` Failed to submit answer for question ${answer.id}:`, error.response?.data || error);
@@ -176,6 +188,10 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
 })
+app.get("/api/v1/usage-today", (req, res) => {
+    res.json({ date: lastResetDate, count: requestCountToday });
+});
+
 
 
 

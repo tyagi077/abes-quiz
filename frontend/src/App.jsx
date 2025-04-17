@@ -12,6 +12,17 @@ function App() {
     pin: "",
   });
 
+  const [usage, setUsage] = useState(0);
+
+  useEffect(() => {
+    const fetchUsage = async () => {
+      const res = await fetch("https://abes-quiz-backend.vercel.app/api/v1/usage-today");
+      const data = await res.json();
+      setUsage(data.count);
+    };
+    fetchUsage();
+  }, []);
+
   const handleClick = async (e) => {
 
     if (!formData.quiz_id || !formData.admission_number || !formData.pin) {
@@ -102,9 +113,14 @@ function App() {
     }
   }, [loading]);
 
+
   return (
     <div className="min-h-screen relative" >
       <div className="fixed top-0 w-full h-[300px] bg-[#66E1D7]">
+       {usage>=5? <div className="absolute top-5 left-5 bg-white px-4 py-2 rounded-xl shadow-lg border border-gray-200 flex items-center gap-2 animate-pulse z-50">
+          <span className="text-md font-bold text-[#0D9488]">{usage}</span>
+          <span className="text-md font-semibold text-gray-500">Students Used Today</span>
+        </div>:''}
         {/* <h3 className="text-red-500 px-5 font-semibold`">🚨 Important Disclaimer 🚨</h3>
         <p className="w-[80%] px-10 text-black font-semibold">This tool is powered by AI and is intended for educational assistance only. Do not rely on it for actual quiz answers. Always attempt the quiz using your own knowledge and understanding to maintain academic honesty and integrity.
         
@@ -112,6 +128,7 @@ function App() {
         }
       </div>
       <div className="absolute py-4 flex flex-col gap-6  overflow-y-auto w-[90%] max-w-[400px]  bg-white px-4   shadow-2xl rounded-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40   ">
+
         <h3 className="text-gray-700 font-semibold text-lg text-center">Enter Your Details</h3>
         <div className="flex flex-col ">
           <label className="text-gray-700 font-semibold text-md">Enter Quiz Code:</label>
