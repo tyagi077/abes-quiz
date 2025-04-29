@@ -29,7 +29,50 @@ let requestCountToday = 0;
 let lastResetDate = new Date().toDateString();
 
 
+app.post("/api/v1/question",async(req,res)=>{
+    const { quiz_uc, user_unique_code, pin } = req.body;
 
+    if (!quiz_uc || !user_unique_code || !pin) {
+        return res.json({
+            success: false,
+            msg: "Missing fields"
+        });
+    }
+
+    try{
+        const response = await axios.post(QUIZ_API_URL, {
+            quiz_uc,
+            user_unique_code,
+            pin
+        });
+
+        const quizData = response?.data?.response?.data || [];
+        if (!Array.isArray(quizData)) {
+            return res.status(200).json({
+                success: false,
+                msg: "Quiz has not started yet",
+                quiz_details: quizData,
+            });
+        }
+
+        if (quizData.length === 0) {
+            return res.status(400).json({
+                success: false,
+                msg: "Invalid quiz details",
+            });
+        }
+
+        return res.json({
+            success:true,
+            quizData
+        })
+
+    }catch(error){
+        res.json({
+            success:false
+        })
+    }
+})
 app.post("/api/v1/fetch", async (req, res) => {
 
     const { quiz_uc, user_unique_code, pin } = req.body;
@@ -77,6 +120,8 @@ app.post("/api/v1/fetch", async (req, res) => {
                 msg: "Invalid quiz details",
             });
         }
+
+
 
         const formattedPrompt = quizData.map((q, index) =>
             `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
