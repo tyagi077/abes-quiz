@@ -37,6 +37,20 @@ function App() {
     setTime(10);
 
     try {
+      const resp = await axios.post("https://abes-quiz-backend.vercel.app/api/v1/question", {
+        quiz_uc: formData.quiz_id,
+        user_unique_code: formData.admission_number,
+        pin: formData.pin
+      });
+    
+      if (resp.data.success) {
+        console.log(resp.data.quizData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
       const response = await axios.post("https://abes-quiz-backend.vercel.app/api/v1/fetch", {
         quiz_uc: formData.quiz_id,
         user_unique_code: formData.admission_number,
