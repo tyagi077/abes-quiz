@@ -1,14 +1,11 @@
 import express from "express"
 import axios from "axios";
 import dotenv from "dotenv";
-// import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from 'groq-sdk';
 import cors from "cors"
 import mongoose from "mongoose";
 import  {UserModel}  from "./db/user.js";
 dotenv.config()
-// const API_KEY = process.env.GEMINI_API_KEY;
-// const genAI = new GoogleGenerativeAI(API_KEY);
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 const client = new Groq({
@@ -25,54 +22,8 @@ const QUIZ_API_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1
 const SUBMIT_ANSWER_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/submitAnswer";
 // const QUIZ_FETCH_URL = "https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-1c23ee6f-939a-44b2-9c4e-d17970ddd644/abes/fetchQuizDetails";
 
-let requestCountToday = 0;
-let lastResetDate = new Date().toDateString();
 
 
-app.post("/api/v1/question",async(req,res)=>{
-    const { quiz_uc, user_unique_code, pin } = req.body;
-
-    if (!quiz_uc || !user_unique_code || !pin) {
-        return res.json({
-            success: false,
-            msg: "Missing fields"
-        });
-    }
-
-    try{
-        const response = await axios.post(QUIZ_API_URL, {
-            quiz_uc,
-            user_unique_code,
-            pin
-        });
-
-        const quizData = response?.data?.response?.data || [];
-        if (!Array.isArray(quizData)) {
-            return res.status(200).json({
-                success: false,
-                msg: "Quiz has not started yet",
-                quiz_details: quizData,
-            });
-        }
-
-        if (quizData.length === 0) {
-            return res.status(400).json({
-                success: false,
-                msg: "Invalid quiz details",
-            });
-        }
-
-        return res.json({
-            success:true,
-            quizData
-        })
-
-    }catch(error){
-        res.json({
-            success:false
-        })
-    }
-})
 app.post("/api/v1/fetch", async (req, res) => {
 
     const { quiz_uc, user_unique_code, pin } = req.body;
@@ -85,18 +36,6 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
     try {
-        // try{
-        //     const fetch_response= await axios.post(QUIZ_FETCH_URL,{
-        //         quiz_uc,
-        //         user_unique_code,
-        //         pin
-        //     })
-        // }catch(error){
-        //     return res.json({
-        //         success:false,
-        //         msg: error.response?.data.msg || error.message
-        //     })
-        // }
 
         const response = await axios.post(QUIZ_API_URL, {
             quiz_uc,
@@ -120,13 +59,9 @@ app.post("/api/v1/fetch", async (req, res) => {
                 msg: "Invalid quiz details",
             });
         }
-
-
-
         const formattedPrompt = quizData.map((q, index) =>
             `Q: ${q.question} (ID: ${q.id})\nOptions: ${q.options.map((opt, optIndex) => `${optIndex + 1}. ${opt.replace(/<\/?pre>/g, "")}`).join(", ")}`
         ).join("\n\n");
-
 
         try {
             const prompt = `You are an expert quiz solver. Provide the answers only in JSON format. Do not include any other text, explanations, or introductions. Please output only the JSON response like this:
@@ -137,7 +72,7 @@ app.post("/api/v1/fetch", async (req, res) => {
 
 
             const completion = await client.chat.completions.create({
-                model: "llama3-70b-8192", // or "llama3-8b-8192", etc.
+                model: "llama3-70b-8192", 
                 messages: [
                     {
                         role: "user",
@@ -148,20 +83,8 @@ app.post("/api/v1/fetch", async (req, res) => {
             });
 
             let text = completion.choices[0]?.message?.content?.trim();
-            // const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
-            // const result = await model.generateContent(`You are an expert quiz solver. Answer these in JSON format:
-            //         [{ "id": <QUESTION_ID>, "correct_option": <CORRECT_OPTION_NUMBER> }] ${formattedPrompt}`);
-
-
-
-            // const airesponse = await result.response;
-            // let text = await airesponse.text();
-
-
-            // text = text.replace(/```json|```/g, "").trim();
-            // console.log(text);
-
+           
+            
 
             let parsedData;
             try {
@@ -174,6 +97,7 @@ app.post("/api/v1/fetch", async (req, res) => {
                 });
             }
 
+
             try {
                 const user = await UserModel.findOne({ admission_id: user_unique_code });
                 if (!user) {
@@ -183,14 +107,7 @@ app.post("/api/v1/fetch", async (req, res) => {
                 console.error("MongoDB Error: ", error.message);
               }
 
-              const today = new Date().toDateString();
-              if (today !== lastResetDate) {
-                  requestCountToday = 0;
-                  lastResetDate = today;
-              }
-              requestCountToday++;
             
-           
 
             for (const answer of parsedData) {
                 try {
@@ -233,11 +150,6 @@ app.post("/api/v1/fetch", async (req, res) => {
     }
 
 })
-app.get("/api/v1/usage-today", (req, res) => {
-    res.json({ date: lastResetDate, count: requestCountToday });
-});
-
-
 
 
 app.listen(3000);
