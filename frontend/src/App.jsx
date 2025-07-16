@@ -29,7 +29,7 @@ function App() {
 
 
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/fetch", {
+      const response = await axios.post("https://abes-quiz-backend.vercel.app/api/v1/fetch", {
         quiz_uc: formData.quiz_id,
         user_unique_code: formData.admission_number,
         pin: formData.pin
