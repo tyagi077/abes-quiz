@@ -2,7 +2,13 @@
 
 [Live Link](https://do-abes-quiz.vercel.app/)
 
+https://github.com/user-attachments/assets/bf38bf22-f2e9-4c5e-b1c0-21b479a12d11
+
 ![](https://github.com/tyagi077/abes-quiz/blob/c2b409792ab1cd9d9f70a4f7df3f2e66278cef3f/demo.png)
+
+![](https://github.com/tyagi077/abes-quiz/blob/d350c057945212ca8b7652e6314df0f029b52ecd/IMG_0691.jpeg)
+
+![](https://github.com/tyagi077/abes-quiz/blob/d350c057945212ca8b7652e6314df0f029b52ecd/IMG_0692.jpeg)
 
 This is an Express.js API that automates fetching quiz questions, solving them using Google Gemini AI, and submitting the answers.
 
