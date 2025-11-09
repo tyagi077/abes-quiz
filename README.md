@@ -1,5 +1,12 @@
 # Quiz Auto-Solver API
 
+[Live Link](https://do-abes-quiz.vercel.app/)
+
+![](https://github.com/tyagi077/abes-quiz/blob/c2b409792ab1cd9d9f70a4f7df3f2e66278cef3f/demo.png)
+
+This is an Express.js API that automates fetching quiz questions, solving them using Google Gemini AI, and submitting the answers.
+
+
 This is an Express.js API that automates fetching quiz questions, solving them using Google Gemini AI, and submitting the answers.
 
 ## 🚀 Features
