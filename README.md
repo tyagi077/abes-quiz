@@ -60,10 +60,4 @@ This is an Express.js API that automates fetching quiz questions, solving them u
    ```sh
    npm run dev
 
-
 💡 Contributions are welcome! Feel free to open issues or submit PRs. 🚀
-
----
-This README gives a clear structure for both frontend and backend. Let me know if you need any modifications! 🚀
-
-
